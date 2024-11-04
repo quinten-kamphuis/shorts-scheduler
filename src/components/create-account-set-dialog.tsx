@@ -15,6 +15,7 @@ import { createAccountSet } from "@/app/actions/account-sets";
 import { NewAccount, type Account } from "@/lib/drizzle/schema";
 import { numid } from "@/lib/utils";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const PLATFORMS = ["YouTube", "TikTok", "Instagram"] as const;
 type Platform = (typeof PLATFORMS)[number];
@@ -38,6 +39,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [accounts, setAccounts] = useState<NewAccount[]>([{ ...emptyAccount }]);
+  const router = useRouter();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,14 +63,19 @@ export function CreateAccountSetDialog({ trigger }: Props) {
       );
 
       // Reset form
-      setName("");
-      setDescription("");
-      setAccounts([{ ...emptyAccount }]);
+      clearForm();
       setOpen(false);
+      router.refresh();
     } catch (error) {
       console.error("Failed to create account set:", error);
       // Add error handling
     }
+  }
+
+  function clearForm() {
+    setName("");
+    setDescription("");
+    setAccounts([{ ...emptyAccount }]);
   }
 
   function addAccount() {
@@ -87,8 +94,13 @@ export function CreateAccountSetDialog({ trigger }: Props) {
     );
   }
 
+  function onOpenChange(value: boolean) {
+    clearForm();
+    setOpen(value);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         {trigger ? (
           trigger
@@ -111,7 +123,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Gaming Channels"
+                placeholder="'factshqq' - 'historian-daily' - 'funny-stories'"
                 className="mt-1"
               />
             </div>
@@ -200,7 +212,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
                     <div>
                       <label className="text-sm font-medium">Password</label>
                       <Input
-                        type="password"
+                        type="text"
                         value={account.password}
                         onChange={(e) =>
                           updateAccount(index, "password", e.target.value)
