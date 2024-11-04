@@ -105,7 +105,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
         {trigger ? (
           trigger
         ) : (
-          <Button id="create-account-set-trigger" variant="outline">
+          <Button variant="outline">
             <Plus className="mr-2 h-4 w-4" />
             Add Account Set
           </Button>

@@ -92,3 +92,48 @@ export async function getAllAccountSets(): Promise<AccountSetWithAccounts[]> {
 
   return Array.from(accountSetsMap.values());
 }
+
+export async function updateAccountSet(
+  id: number,
+  accountSet: NewAccountSet,
+  accounts: NewAccount[]
+): Promise<AccountSetWithAccounts> {
+  return db.transaction(async (tx) => {
+    // Update account set
+    await tx
+      .update(AccountSetTable)
+      .set(accountSet)
+      .where(eq(AccountSetTable.id, id));
+
+    // Update accounts
+    await Promise.all(
+      accounts.map((account) => {
+        if (account.id === undefined) {
+          throw new Error(
+            `Account id is undefined for account: ${JSON.stringify(account)}`
+          );
+        }
+        return tx
+          .update(AccountTable)
+          .set(account)
+          .where(eq(AccountTable.id, account.id));
+      })
+    );
+
+    const updatedAccountSet = await getAccountSetById(id);
+    if (!updatedAccountSet) {
+      throw new Error(`AccountSet with id ${id} not found`);
+    }
+    return updatedAccountSet;
+  });
+}
+
+export async function deleteAccountSet(id: number): Promise<void> {
+  await db.transaction(async (tx) => {
+    // Delete all accounts in the set
+    await tx.delete(AccountTable).where(eq(AccountTable.accountSetId, id));
+
+    // Delete the account set
+    await tx.delete(AccountSetTable).where(eq(AccountSetTable.id, id));
+  });
+}

@@ -51,7 +51,7 @@ export async function createPost(data: {
   scheduledDate: Date;
   notes?: string;
 }): Promise<PostWithRelations> {
-  return db.transaction(async (tx) => {
+  const post = await db.transaction(async (tx) => {
     // Create the main post
     const [post] = await tx
       .insert(PostTable)
@@ -81,9 +81,11 @@ export async function createPost(data: {
       )
       .returning();
 
-    // Return full post with relations
-    return getPostById(post.id);
+    return post;
   });
+
+  // Return full post with relations
+  return getPostById(post.id);
 }
 
 // Get a single post with all its relations

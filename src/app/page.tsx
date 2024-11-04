@@ -8,8 +8,9 @@ import {
 import { StatsCard } from "@/components/stats-card";
 import { PostList } from "@/components/post-list";
 import { getAllAccountSets } from "@/app/actions/account-sets";
-import { getPlatformColor } from "@/lib/utils";
 import { CreateAccountSetDialog } from "@/components/create-account-set-dialog";
+import { AccountSetCard } from "@/components/account-set-card";
+import { CreatePostDialog } from "@/components/create-post";
 
 function Loading() {
   return <div className="p-8 text-gray-500">Loading your posts...</div>;
@@ -34,7 +35,10 @@ async function DashboardContent() {
             Track and manage your cross-platform posts
           </p>
         </div>
-        <CreateAccountSetDialog />
+        <div className="flex gap-4">
+          <CreatePostDialog />
+          <CreateAccountSetDialog />
+        </div>
       </div>
 
       {/* Stats Overview */}
@@ -71,34 +75,7 @@ async function DashboardContent() {
         <h2 className="mb-4 text-lg font-medium">Account Sets</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {accountSets.map((set) => (
-            <div
-              key={set.id}
-              className="rounded-lg border bg-white p-4 shadow-sm"
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="font-medium">{set.name}</h3>
-                <span className="rounded-full bg-blue-50 px-2 py-1 text-xs text-blue-600">
-                  {set.accounts.length} accounts
-                </span>
-              </div>
-              <div className="mt-2">
-                {set.accounts.map((account) => (
-                  <div
-                    key={account.id}
-                    className="mt-1 flex items-center gap-2 text-sm text-gray-600"
-                  >
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${getPlatformColor(
-                        account.platform
-                      )}`}
-                    >
-                      {account.platform}
-                    </span>
-                    <span>{account.accountName}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <AccountSetCard key={set.id} accountSet={set} />
           ))}
           <CreateAccountSetDialog
             trigger={
