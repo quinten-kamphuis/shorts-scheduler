@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/drizzle/db";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import {
   AccountSetTable,
   AccountTable,
@@ -99,31 +99,94 @@ export async function updateAccountSet(
   accounts: NewAccount[]
 ): Promise<AccountSetWithAccounts> {
   return db.transaction(async (tx) => {
+    // First, verify the account set exists
+    const [existingSet] = await tx
+      .select()
+      .from(AccountSetTable)
+      .where(eq(AccountSetTable.id, id));
+
+    if (!existingSet) {
+      throw new Error(`AccountSet with id ${id} not found`);
+    }
+
     // Update account set
     await tx
       .update(AccountSetTable)
       .set(accountSet)
       .where(eq(AccountSetTable.id, id));
 
-    // Update accounts
-    await Promise.all(
-      accounts.map((account) => {
-        if (account.id === undefined) {
-          throw new Error(
-            `Account id is undefined for account: ${JSON.stringify(account)}`
-          );
-        }
-        return tx
-          .update(AccountTable)
-          .set(account)
-          .where(eq(AccountTable.id, account.id));
-      })
+    // Get existing accounts
+    const existingAccounts = await tx
+      .select()
+      .from(AccountTable)
+      .where(eq(AccountTable.accountSetId, id));
+
+    // Determine accounts to delete, update, and insert
+    const accountsToDelete = existingAccounts.filter(
+      (existingAccount) =>
+        !accounts.some((account) => account.id === existingAccount.id)
+    );
+    const accountsToUpdate = accounts.filter((account) =>
+      existingAccounts.some(
+        (existingAccount) => existingAccount.id === account.id
+      )
+    );
+    const accountsToInsert = accounts.filter(
+      (account) =>
+        !existingAccounts.some(
+          (existingAccount) => existingAccount.id === account.id
+        )
     );
 
-    const updatedAccountSet = await getAccountSetById(id);
-    if (!updatedAccountSet) {
-      throw new Error(`AccountSet with id ${id} not found`);
+    // Delete accounts
+    if (accountsToDelete.length > 0) {
+      await tx.delete(AccountTable).where(
+        and(
+          eq(AccountTable.accountSetId, id),
+          inArray(
+            AccountTable.id,
+            accountsToDelete.map((account) => account.id)
+          )
+        )
+      );
     }
+
+    // Update accounts
+    for (const account of accountsToUpdate) {
+      if (account.id === undefined) {
+        throw new Error("Account id is required for update");
+      }
+      await tx
+        .update(AccountTable)
+        .set({
+          ...account,
+          accountSetId: id, // Ensure accountSetId is preserved
+        })
+        .where(eq(AccountTable.id, account.id));
+    }
+
+    // Insert new accounts
+    if (accountsToInsert.length > 0) {
+      await tx.insert(AccountTable).values(
+        accountsToInsert.map((account) => ({
+          ...account,
+          accountSetId: id,
+        }))
+      );
+    }
+
+    // Return updated account set with accounts
+    const updatedAccounts = await tx
+      .select()
+      .from(AccountTable)
+      .where(eq(AccountTable.accountSetId, id));
+
+    const updatedAccountSet = {
+      ...existingSet,
+      ...accountSet,
+      accounts: updatedAccounts,
+    };
+
     return updatedAccountSet;
   });
 }

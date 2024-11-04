@@ -231,6 +231,27 @@ export async function markNotPosted(
     );
 }
 
+export async function toggleIsPosted(
+  postId: number,
+  accountId: number
+): Promise<void> {
+  const [status] = await db
+    .select()
+    .from(PostStatusTable)
+    .where(
+      and(
+        eq(PostStatusTable.postId, postId),
+        eq(PostStatusTable.accountId, accountId)
+      )
+    );
+
+  if (status.isPosted) {
+    await markNotPosted(postId, accountId);
+  } else {
+    await markPosted(postId, accountId);
+  }
+}
+
 // Get dashboard statistics
 export async function getDashboardStats() {
   const today = new Date();

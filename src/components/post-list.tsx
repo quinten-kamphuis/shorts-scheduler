@@ -1,6 +1,8 @@
-import { markPosted, PostWithRelations } from "@/app/actions/posts";
+import { PostWithRelations, toggleIsPosted } from "@/app/actions/posts";
 import { getPlatformColor } from "@/lib/utils";
 import { CheckCircle2, AlertCircle } from "lucide-react";
+import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 type PostListProps = {
   posts: PostWithRelations[];
@@ -11,9 +13,18 @@ export function PostList({
   posts,
   emptyMessage = "No posts found",
 }: PostListProps) {
-  async function togglePosted(postId: number, accountId: number) {
+  async function togglePosted(formData: FormData) {
     "use server";
-    await markPosted(postId, accountId);
+    const postId = parseInt((formData.get("postId") as string) ?? "0");
+    const accountId = parseInt((formData.get("accountId") as string) ?? "0");
+
+    if (!postId || !accountId) {
+      toast.error("Invalid form data");
+      return;
+    }
+
+    await toggleIsPosted(postId, accountId);
+    redirect("/");
   }
 
   if (posts.length === 0) {
@@ -66,11 +77,13 @@ export function PostList({
                   <span className="text-sm">{status.account.accountName}</span>
                 </div>
 
-                <form
-                  action={async () => {
-                    await togglePosted(post.id, status.account.id);
-                  }}
-                >
+                <form action={togglePosted}>
+                  <input type="hidden" name="postId" value={post.id} />
+                  <input
+                    type="hidden"
+                    name="accountId"
+                    value={status.account.id}
+                  />
                   <button
                     type="submit"
                     className={`rounded-full p-1 ${

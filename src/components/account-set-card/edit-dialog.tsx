@@ -11,6 +11,7 @@ import { Plus, X } from "lucide-react";
 import { AccountSet, NewAccount } from "@/lib/drizzle/schema";
 import { numid } from "@/lib/utils";
 import { updateAccountSet } from "@/app/actions/account-sets";
+import { toast } from "sonner";
 
 const PLATFORMS = ["YouTube", "TikTok", "Instagram"] as const;
 type Platform = (typeof PLATFORMS)[number];
@@ -69,6 +70,7 @@ export function EditAccountSetDialog({
       onUpdate();
       onOpenChange(false);
     } catch (error) {
+      toast.error("Failed to update account set");
       console.error("Failed to update account set:", error);
     } finally {
       setIsSubmitting(false);

@@ -13,6 +13,11 @@ import { EditAccountSetDialog } from "./edit-dialog";
 import { DeleteAccountSetDialog } from "./delete-dialog";
 import { cn, getPlatformColor, getPlatformIcon } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
 type AccountSetCardProps = {
   accountSet: AccountSet & {
@@ -42,9 +47,23 @@ export function AccountSetCard({ accountSet }: AccountSetCardProps) {
         <div className="flex items-center justify-between">
           <h3 className="font-medium">{accountSet.name}</h3>
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-blue-50 px-2 py-1 text-xs text-blue-600">
-              {accountSet.accounts.length} accounts
-            </span>
+            <Tooltip>
+              <TooltipTrigger>
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-1 text-xs",
+                    accountSet.accounts.length < 3
+                      ? "bg-orange-50 text-orange-600"
+                      : "bg-blue-50 text-blue-600"
+                  )}
+                >
+                  {accountSet.accounts.length} / 3 accounts
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                You should have at least 3 accounts in a set
+              </TooltipContent>
+            </Tooltip>
             <DropdownMenu>
               <DropdownMenuTrigger className="rounded-full p-1 hover:bg-gray-100">
                 <MoreVertical className="h-4 w-4 text-gray-500" />
