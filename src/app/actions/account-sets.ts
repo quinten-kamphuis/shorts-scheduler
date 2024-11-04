@@ -7,6 +7,9 @@ import {
   AccountTable,
   type NewAccountSet,
   type NewAccount,
+  PostStatusTable,
+  NewPostStatus,
+  PostTable,
 } from "@/lib/drizzle/schema";
 
 export type AccountSetWithAccounts = typeof AccountSetTable.$inferSelect & {
@@ -167,12 +170,39 @@ export async function updateAccountSet(
 
     // Insert new accounts
     if (accountsToInsert.length > 0) {
-      await tx.insert(AccountTable).values(
-        accountsToInsert.map((account) => ({
-          ...account,
-          accountSetId: id,
-        }))
-      );
+      // First insert the new accounts and get their IDs
+      const insertedAccounts = await tx
+        .insert(AccountTable)
+        .values(
+          accountsToInsert.map((account) => ({
+            ...account,
+            accountSetId: id,
+          }))
+        )
+        .returning();
+
+      // Get all posts for this account set
+      const posts = await tx
+        .select()
+        .from(PostTable)
+        .where(eq(PostTable.accountSetId, id));
+
+      // Create statuses for all posts for the new accounts
+      if (posts.length > 0) {
+        const newStatuses = posts.flatMap<NewPostStatus>((post) =>
+          insertedAccounts.map((account) => ({
+            postId: post.id,
+            accountId: account.id,
+            notes: null,
+            isPosted: false,
+            postedAt: null,
+          }))
+        );
+
+        if (newStatuses.length > 0) {
+          await tx.insert(PostStatusTable).values(newStatuses);
+        }
+      }
     }
 
     // Return updated account set with accounts
@@ -192,11 +222,5 @@ export async function updateAccountSet(
 }
 
 export async function deleteAccountSet(id: number): Promise<void> {
-  await db.transaction(async (tx) => {
-    // Delete all accounts in the set
-    await tx.delete(AccountTable).where(eq(AccountTable.accountSetId, id));
-
-    // Delete the account set
-    await tx.delete(AccountSetTable).where(eq(AccountSetTable.id, id));
-  });
+  await db.delete(AccountSetTable).where(eq(AccountSetTable.id, id));
 }

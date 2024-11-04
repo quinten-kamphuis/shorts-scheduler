@@ -294,21 +294,25 @@ export async function getDashboardStats() {
 
 // Update post details
 export async function updatePost(
-  id: number,
-  data: Partial<{
+  post: Partial<{
+    id: number;
+    videoId: number;
+    title: string;
+    caption: string;
     scheduledDate: Date;
     notes: string;
   }>
 ): Promise<PostWithRelations> {
+  if (!post.id) throw new Error("Post ID is required");
   await db
     .update(PostTable)
     .set({
-      ...data,
+      ...post,
       updatedAt: new Date(),
     })
-    .where(eq(PostTable.id, id));
+    .where(eq(PostTable.id, post.id));
 
-  return await getPostById(id);
+  return await getPostById(post.id);
 }
 
 // Delete a post and its statuses
