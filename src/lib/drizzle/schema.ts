@@ -14,6 +14,8 @@ export const AccountSetTable = pgTable("account_set", {
   id: serial().primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
   description: text("description"),
+  phone: varchar("phone", { length: 20 }),
+  email: varchar("email", { length: 100 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

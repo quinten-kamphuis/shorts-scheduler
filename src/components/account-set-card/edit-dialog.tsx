@@ -39,6 +39,8 @@ export function EditAccountSetDialog({
 }: EditDialogProps) {
   const [name, setName] = useState(accountSet.name);
   const [description, setDescription] = useState(accountSet.description ?? "");
+  const [phone, setPhone] = useState(accountSet.phone ?? "");
+  const [email, setEmail] = useState(accountSet.email ?? "");
   const [accounts, setAccounts] = useState<NewAccount[]>(
     accountSet.accounts.map((acc) => ({
       ...acc,
@@ -57,6 +59,8 @@ export function EditAccountSetDialog({
         {
           name,
           description,
+          phone,
+          email,
         },
         accounts.map((acc) => ({
           id: acc.id,
@@ -125,6 +129,22 @@ export function EditAccountSetDialog({
               <Input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Phone</label>
+              <Input
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Email</label>
+              <Input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
               />
             </div>

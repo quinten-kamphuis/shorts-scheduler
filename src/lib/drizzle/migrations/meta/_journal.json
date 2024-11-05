@@ -8,6 +8,13 @@
       "when": 1730754185621,
       "tag": "0000_long_fenris",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1730809752718,
+      "tag": "0001_sturdy_synch",
+      "breakpoints": true
     }
   ]
 }
