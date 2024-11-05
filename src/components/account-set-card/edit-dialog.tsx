@@ -41,6 +41,9 @@ export function EditAccountSetDialog({
   const [description, setDescription] = useState(accountSet.description ?? "");
   const [phone, setPhone] = useState(accountSet.phone ?? "");
   const [email, setEmail] = useState(accountSet.email ?? "");
+  const [emailPassword, setEmailPassword] = useState(
+    accountSet.emailPassword ?? ""
+  );
   const [accounts, setAccounts] = useState<NewAccount[]>(
     accountSet.accounts.map((acc) => ({
       ...acc,
@@ -61,6 +64,7 @@ export function EditAccountSetDialog({
           description,
           phone,
           email,
+          emailPassword,
         },
         accounts.map((acc) => ({
           id: acc.id,
@@ -122,6 +126,7 @@ export function EditAccountSetDialog({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1"
+                placeholder="Account set name"
               />
             </div>
             <div>
@@ -130,6 +135,7 @@ export function EditAccountSetDialog({
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="mt-1"
+                placeholder="Description"
               />
             </div>
             <div>
@@ -138,6 +144,7 @@ export function EditAccountSetDialog({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="mt-1"
+                placeholder="Phone number"
               />
             </div>
             <div>
@@ -146,6 +153,16 @@ export function EditAccountSetDialog({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1"
+                placeholder="Email"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Email Password</label>
+              <Input
+                value={emailPassword}
+                onChange={(e) => setEmailPassword(e.target.value)}
+                className="mt-1"
+                placeholder="Email password"
               />
             </div>
           </div>

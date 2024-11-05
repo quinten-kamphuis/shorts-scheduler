@@ -16,6 +16,7 @@ export const AccountSetTable = pgTable("account_set", {
   description: text("description"),
   phone: varchar("phone", { length: 20 }),
   email: varchar("email", { length: 100 }),
+  emailPassword: varchar("email_password", { length: 100 }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

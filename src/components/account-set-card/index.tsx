@@ -103,6 +103,16 @@ export function AccountSetCard({ accountSet }: AccountSetCardProps) {
           )}
         </div>
 
+        {/* Email password if exists */}
+        {accountSet.emailPassword && (
+          <div className="mt-1 flex items-center gap-4 text-sm text-gray-500">
+            <span>
+              <span className="mr-1">🔑</span>
+              {accountSet.emailPassword}
+            </span>
+          </div>
+        )}
+
         {/* Accounts List */}
         <div className="mt-4 space-y-2">
           {accountSet.accounts.map((account) => (

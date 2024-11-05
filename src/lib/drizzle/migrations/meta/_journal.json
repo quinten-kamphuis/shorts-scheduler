@@ -15,6 +15,13 @@
       "when": 1730809752718,
       "tag": "0001_sturdy_synch",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730810800603,
+      "tag": "0002_worthless_toad",
+      "breakpoints": true
     }
   ]
 }

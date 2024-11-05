@@ -1,0 +1,1 @@
+ALTER TABLE "account_set" ADD COLUMN "email_password" varchar(100);

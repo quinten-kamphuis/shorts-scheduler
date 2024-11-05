@@ -40,6 +40,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
   const [description, setDescription] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [emailPassword, setEmailPassword] = useState("");
   const [accounts, setAccounts] = useState<NewAccount[]>([{ ...emptyAccount }]);
   const router = useRouter();
 
@@ -61,6 +62,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
           description,
           phone,
           email,
+          emailPassword,
         },
         accounts
       );
@@ -154,6 +156,15 @@ export function CreateAccountSetDialog({ trigger }: Props) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email address"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Email Password</label>
+              <Input
+                value={emailPassword}
+                onChange={(e) => setEmailPassword(e.target.value)}
+                placeholder="Email password"
                 className="mt-1"
               />
             </div>
