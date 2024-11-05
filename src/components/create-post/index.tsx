@@ -14,6 +14,7 @@ import { AccountSetSelection } from "@/components/create-post/account-set-select
 import { PostDetails } from "@/components/create-post/post-details";
 import { VideoUpload } from "@/components/create-post/video-upload";
 import { Video } from "@/lib/drizzle/schema";
+import { useRouter } from "next/navigation";
 
 export function CreatePostDialog() {
   const [step, setStep] = useState<"upload" | "details" | "accounts">("upload");
@@ -22,6 +23,7 @@ export function CreatePostDialog() {
   const [selectedAccountSets, setSelectedAccountSets] = useState<number[]>([]);
   const [scheduledDate, setScheduledDate] = useState<Date>(new Date());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   function resetForm() {
     setStep("upload");
@@ -29,6 +31,7 @@ export function CreatePostDialog() {
     setSelectedAccountSets([]);
     setScheduledDate(new Date());
     setIsSubmitting(false);
+    router.refresh();
   }
 
   function handleClose() {

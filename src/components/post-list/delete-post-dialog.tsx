@@ -8,8 +8,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { PostWithRelations } from "@/app/actions/posts";
 import { useState } from "react";
-import { deletePost } from "@/app/actions/posts"; // You'll need to create this
+import { deletePost } from "@/app/actions/posts";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type DeletePostDialogProps = {
   open: boolean;
@@ -23,6 +24,7 @@ export function DeletePostDialog({
   post,
 }: DeletePostDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   async function handleDelete() {
     setIsDeleting(true);
@@ -30,6 +32,7 @@ export function DeletePostDialog({
       await deletePost(post.id);
       toast.success("Post deleted successfully");
       onOpenChange(false);
+      router.refresh();
     } catch {
       toast.error("Failed to delete post");
     } finally {

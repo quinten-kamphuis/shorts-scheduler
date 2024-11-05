@@ -15,6 +15,10 @@ import {
 import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+import { updateVideo } from "@/app/actions/videos";
 
 type PostDetailsProps = {
   video: Video;
@@ -31,6 +35,16 @@ export function PostDetails({
   onBack,
   onNext,
 }: PostDetailsProps) {
+  const [videoTitle, setVideoTitle] = useState(video.title);
+  const [videoCaption, setVideoCaption] = useState(video.caption ?? "");
+
+  const handleOnBlur = () => {
+    updateVideo(video.id, {
+      title: videoTitle,
+      caption: videoCaption,
+    });
+  };
+
   return (
     <div className="space-y-6">
       {/* Video Preview */}
@@ -41,6 +55,35 @@ export function PostDetails({
           controls
         />
         <p className="mt-2 text-sm font-medium">{video.title}</p>
+      </div>
+
+      {/* Video Details */}
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium">Title</label>
+          <Input
+            type="text"
+            value={videoTitle}
+            onChange={(e) => {
+              setVideoTitle(e.target.value);
+            }}
+            onBlur={handleOnBlur}
+            className="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium">Caption</label>
+          <Textarea
+            value={videoCaption}
+            onChange={(e) => {
+              setVideoCaption(e.target.value);
+            }}
+            onBlur={handleOnBlur}
+            className="mt-1 w-full rounded-md border-gray-300 shadow-sm"
+          >
+            Write a caption for your video...
+          </Textarea>
+        </div>
       </div>
 
       {/* Schedule */}

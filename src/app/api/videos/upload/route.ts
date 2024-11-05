@@ -39,7 +39,8 @@ export async function POST(request: Request) {
       .values({
         title: title || file.name,
         filePath: `/uploads/${filename}`,
-        duration: "0:00", // You might want to extract this from the video
+        fileName: file.name,
+        duration: "0:00", // Might want to implement this later
       })
       .returning();
 

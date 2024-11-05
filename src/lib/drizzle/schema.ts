@@ -38,6 +38,7 @@ export const VideoTable = pgTable("video", {
   id: serial().primaryKey(),
   title: varchar("title", { length: 200 }).notNull(),
   filePath: varchar("file_path", { length: 500 }).notNull(),
+  fileName: varchar("file_name", { length: 200 }).notNull(),
   duration: varchar("duration", { length: 10 }),
   caption: text("caption"),
   thumbnailPath: varchar("thumbnail_path", { length: 500 }),

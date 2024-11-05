@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS "video" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"title" varchar(200) NOT NULL,
 	"file_path" varchar(500) NOT NULL,
+	"file_name" varchar(200) NOT NULL,
 	"duration" varchar(10),
 	"caption" text,
 	"thumbnail_path" varchar(500),

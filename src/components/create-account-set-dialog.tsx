@@ -123,7 +123,7 @@ export function CreateAccountSetDialog({ trigger }: Props) {
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="'factshqq' - 'historian-daily' - 'funny-stories'"
+                placeholder="'Weird Facts' - 'Cool History' - 'Gross Science'"
                 className="mt-1"
               />
             </div>
