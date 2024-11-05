@@ -22,5 +22,15 @@ const config: Config = {
     },
   },
   plugins: [tailwindcssAnimate],
+  safelist: [
+    "bg-red-50",
+    "text-red-700",
+    "bg-purple-50",
+    "text-purple-700",
+    "bg-pink-50",
+    "text-pink-700",
+    "bg-gray-50",
+    "text-gray-700",
+  ],
 };
 export default config;

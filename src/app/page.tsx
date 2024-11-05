@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Calendar, CheckCircle2, Clock, Plus, Users } from "lucide-react";
+import { Calendar, CheckCircle2, Clock, Users } from "lucide-react";
 import {
   getTodaysPosts,
   getUpcomingPosts,
@@ -9,8 +9,8 @@ import { StatsCard } from "@/components/stats-card";
 import { PostList } from "@/components/post-list";
 import { getAllAccountSets } from "@/app/actions/account-sets";
 import { CreateAccountSetDialog } from "@/components/create-account-set-dialog";
-import { AccountSetCard } from "@/components/account-set-card";
 import { CreatePostDialog } from "@/components/create-post";
+import { AccountSetOverview } from "@/components/account-set-overview";
 
 function Loading() {
   return <div className="p-8 text-gray-500">Loading your posts...</div>;
@@ -71,24 +71,7 @@ async function DashboardContent() {
       </div>
 
       {/* Account Sets Overview */}
-      <div className="mb-8">
-        <h2 className="mb-4 text-lg font-medium">Account Sets</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {accountSets.map((set) => (
-            <AccountSetCard key={set.id} accountSet={set} />
-          ))}
-          <CreateAccountSetDialog
-            trigger={
-              <button className="flex h-full min-h-[120px] items-center justify-center rounded-lg border-2 border-dashed border-gray-200 bg-white p-4 text-gray-500 hover:border-gray-300 hover:bg-gray-50">
-                <div className="flex flex-col items-center gap-1">
-                  <Plus className="h-5 w-5" />
-                  <span className="text-sm">Add Account Set</span>
-                </div>
-              </button>
-            }
-          />
-        </div>
-      </div>
+      <AccountSetOverview accountSets={accountSets} />
 
       {/* Today's Posts */}
       <div className="mb-8">
