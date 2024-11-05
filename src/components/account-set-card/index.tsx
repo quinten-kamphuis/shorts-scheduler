@@ -87,6 +87,22 @@ export function AccountSetCard({ accountSet }: AccountSetCardProps) {
           <p className="mt-1 text-sm text-gray-600">{accountSet.description}</p>
         )}
 
+        {/* Phone and email if exists */}
+        <div className="mt-1 flex items-center gap-4 text-sm text-gray-500">
+          {accountSet.phone && (
+            <span>
+              <span className="mr-1">📞</span>
+              {accountSet.phone}
+            </span>
+          )}
+          {accountSet.email && (
+            <span>
+              <span className="mr-1">📧</span>
+              {accountSet.email}
+            </span>
+          )}
+        </div>
+
         {/* Accounts List */}
         <div className="mt-4 space-y-2">
           {accountSet.accounts.map((account) => (
