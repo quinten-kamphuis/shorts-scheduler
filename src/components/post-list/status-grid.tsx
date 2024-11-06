@@ -15,6 +15,8 @@ export function StatusGrid({ post }: StatusGridProps) {
     router.refresh();
   }
 
+  // console.log(post.statuses);
+
   return (
     <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {post.statuses.map((status) => (

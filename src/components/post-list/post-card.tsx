@@ -4,9 +4,10 @@ import { useState } from "react";
 import { StatusGrid } from "./status-grid";
 import { EditPostDialog } from "./edit-post-dialog";
 import { Button } from "@/components/ui/button";
-import { Download, Pencil, Trash2 } from "lucide-react";
+import { Download, Eye, Pencil, Trash2 } from "lucide-react";
 import { DeletePostDialog } from "./delete-post-dialog";
 import { PostWithRelations } from "@/app/actions/posts";
+import { PreviewVideoDialog } from "@/components/post-list/preview-video-dialog";
 
 type PostCardProps = {
   post: PostWithRelations;
@@ -15,6 +16,7 @@ type PostCardProps = {
 export function PostCard({ post }: PostCardProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
   async function handleDownload() {
     // Create a link and trigger download
@@ -36,6 +38,13 @@ export function PostCard({ post }: PostCardProps) {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">{post.video?.title}</span>
               <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowPreviewDialog(true)}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
                 <Button
                   variant="outline"
                   size="icon"
@@ -75,6 +84,12 @@ export function PostCard({ post }: PostCardProps) {
 
         <StatusGrid post={post} />
       </div>
+
+      <PreviewVideoDialog
+        open={showPreviewDialog}
+        onOpenChange={setShowPreviewDialog}
+        post={post}
+      />
 
       <EditPostDialog
         open={showEditDialog}

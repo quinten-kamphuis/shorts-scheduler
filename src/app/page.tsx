@@ -21,7 +21,7 @@ async function DashboardContent() {
   const [stats, todaysPosts, upcomingPosts, accountSets] = await Promise.all([
     getDashboardStats(),
     getTodaysPosts(),
-    getUpcomingPosts(10),
+    getUpcomingPosts(),
     getAllAccountSets(),
   ]);
 

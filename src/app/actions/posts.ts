@@ -135,9 +135,7 @@ export async function getTodaysPosts(): Promise<PostWithRelations[]> {
 }
 
 // Get upcoming posts with full relations
-export async function getUpcomingPosts(
-  limit = 10
-): Promise<PostWithRelations[]> {
+export async function getUpcomingPosts(): Promise<PostWithRelations[]> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -155,8 +153,7 @@ export async function getUpcomingPosts(
     .leftJoin(PostStatusTable, eq(PostStatusTable.postId, PostTable.id))
     .leftJoin(AccountTable, eq(AccountTable.id, PostStatusTable.accountId))
     .where(gte(PostTable.scheduledDate, today))
-    .orderBy(asc(PostTable.scheduledDate))
-    .limit(limit);
+    .orderBy(asc(PostTable.scheduledDate));
 
   // Group by post ID to handle multiple statuses
   return groupPostResults(posts);
